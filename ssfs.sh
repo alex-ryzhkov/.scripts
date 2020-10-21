@@ -1,29 +1,31 @@
-#!/usr/bin/sh
-echo "$remotedir"
-function gethost {
-    host=`grep -i 'host ' ~/.ssh/config | awk '{print $2}' | fzf`
-    echo ${host}
+#!/usr/bin/bash
+
+gethost() {
+    host=$(grep -i 'host ' ~/.ssh/config | awk '{print $2}' | fzf)
 }
 
-function getremotedir {
+getremotedir() {
     read -p "Enter remote directory to mount (default \"/\"): " remotedir
 }
 
-function getlocaldir {
+getlocaldir() {
     read -p "Enter local directory to mount (default \"~/remote\"): " localdir
 }
 
-function main {
+main() {
+    gethost
+    if [ -z "$host" ]; then
+        exit
+    fi
+    getremotedir
     if [ -z "$remotedir" ]; then
         remotedir='/'
     fi
+    getlocaldir
     if [ -z "$localdir" ]; then
         localdir="${HOME}/remote"
     fi
-    sshfs -o allow_other ${host}:${remotedir} ${localdir}
+    sshfs -o allow_other "${host}":"${remotedir}" "${localdir}"
 }
 
-gethost
-getremotedir
-getlocaldir
 main
