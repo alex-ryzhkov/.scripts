@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+RANGER_PID=$(pgrep ranger)
+if [ -z $RANGER_PID ]; then
+    if [ -z ${1} ]; then
+        /usr/bin/ranger
+    else
+        /usr/bin/ranger ${1}
+    fi
+else
+    echo ${1}
+    if [ -z ${1} ]; then
+        wmctrl -a ranger
+    else
+        if [ ${1} == "." ]; then
+            echo tab_new `pwd` >  /tmp/ranger-ipc.${RANGER_PID}
+            wmctrl -a ranger
+        else
+            echo tab_new ${1} >  /tmp/ranger-ipc.${RANGER_PID}
+            wmctrl -a ranger
+        fi
+    fi
+fi

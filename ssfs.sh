@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 gethost() {
     host=$(grep -i 'host ' ~/.ssh/config | awk '{print $2}' | fzf)
@@ -25,7 +25,8 @@ main() {
     if [ -z "$localdir" ]; then
         localdir="${HOME}/remote"
     fi
-    sshfs -o allow_other "${host}":"${remotedir}" "${localdir}"
+    #sshfs -o allow_other "${host}":"${remotedir}" "${localdir}"
+    sshfs "${host}":"${remotedir}" "${localdir}"
 }
 
 main
